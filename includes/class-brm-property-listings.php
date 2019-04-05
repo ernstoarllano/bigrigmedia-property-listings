@@ -58,6 +58,15 @@ class Brm_Property_Listings {
 	protected $version;
 
 	/**
+	 * The API key for Google Maps of the plugin 
+	 * 
+	 * @since		1.0.0
+	 * @access	protected
+	 * @var			string		$google_maps_api		The API key for Google Maps 
+	 */
+	protected $google_maps_api;
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -73,6 +82,7 @@ class Brm_Property_Listings {
 			$this->version = '1.0.0';
 		}
 		$this->plugin_name = 'brm-property-listings';
+		$this->google_maps_api = 'AIzaSyCugE131kHRpc9su0FCtcHaXepJ11xn_Qo';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -157,6 +167,18 @@ class Brm_Property_Listings {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
+		$this->loader->add_action( 'init', $plugin_admin, 'register_post_types' );
+		$this->loader->add_action( 'init', $plugin_admin, 'register_post_taxonomies' );
+		$this->loader->add_action( 'init', $plugin_admin, 'post_type_rewrites' );
+		$this->loader->add_action( 'manage_listings_posts_custom_column', $plugin_admin, 'post_type_admin_columns_content', 10, 2 );
+		$this->loader->add_action( 'save_post', $plugin_admin, 'save_metabox' );
+
+		$this->loader->add_filter( 'post_type_link', $plugin_admin, 'taxonomy_permalinks', 1, 2 );
+
+		$this->loader->add_filter( 'manage_edit-listings_columns', $plugin_admin, 'post_type_admin_columns' );
+
+		$this->loader->add_filter( 'rest_prepare_listings', $plugin_admin, 'listings_api_json', 10, 3 );
+
 	}
 
 	/**
@@ -168,10 +190,11 @@ class Brm_Property_Listings {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Brm_Property_Listings_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Brm_Property_Listings_Public( $this->get_plugin_name(), $this->get_version(), $this->get_google_maps_api() );
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		//$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts', 200 );
+		$this->loader->add_action( 'script_loader_tag', $plugin_public, 'script_defer', 10, 3 );
 
 	}
 
@@ -213,6 +236,16 @@ class Brm_Property_Listings {
 	 */
 	public function get_version() {
 		return $this->version;
+	}
+
+	/**
+	 * Retreive the Google Maps API key of the plugin.
+	 * 
+	 * @since			1.0.0
+	 * @return		string		The API key for Google Maps of the plugin.
+	 */
+	public function get_google_maps_api() {
+		return $this->google_maps_api;
 	}
 
 }

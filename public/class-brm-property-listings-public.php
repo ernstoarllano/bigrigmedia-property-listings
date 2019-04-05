@@ -41,16 +41,26 @@ class Brm_Property_Listings_Public {
 	private $version;
 
 	/**
+	 * 
+	 * @since		1.0.0
+	 * @access	protected
+	 * @var			string		 $google_maps_api		The API key for Google Maps.
+	 */
+	private $google_maps_api;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
 	 * @param      string    $plugin_name       The name of the plugin.
-	 * @param      string    $version    The version of this plugin.
+	 * @param      string    $version    				The version of this plugin.
+	 * @param      string    $google_maps_api   The API key for Google Maps.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( $plugin_name, $version, $google_maps_api ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->google_maps_api = $google_maps_api;
 
 	}
 
@@ -96,8 +106,33 @@ class Brm_Property_Listings_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/brm-property-listings-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/brm-property-listings-public.js', array( 'jquery' ), $this->version, true );
 
+		wp_enqueue_script( 'brm-google-maps', 'https://maps.googleapis.com/maps/api/js?key='.$this->google_maps_api.'', [], null, true );
+
+	}
+
+	/**
+	 * @since 1.0.0
+	 */
+	public function script_defer( $tag, $handle, $src ) {
+		$scripts = [
+			'brm-property-listings',
+			'brm-google-maps'
+		];
+
+		if (in_array($handle, $scripts)) {
+				switch ($handle) {
+					case 'brm-google-maps':
+						return '<script src="'.$src.'" async defer></script>';
+					break;
+					default:
+						return '<script src="'.$src.'" defer></script>';
+					break;
+				}
+		}
+
+		return $tag;
 	}
 
 }

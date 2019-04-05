@@ -2,3 +2,9 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+.input,
+.select {
+  width: 100%;
+  padding: 8px 5px;
+}
