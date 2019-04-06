@@ -61,18 +61,6 @@ class Brm_Property_Listings_Admin {
 	 */
 	public function enqueue_styles() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Brm_Property_Listings_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Brm_Property_Listings_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/brm-property-listings-admin.css', array(), $this->version, 'all' );
 
 	}
@@ -83,18 +71,6 @@ class Brm_Property_Listings_Admin {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Brm_Property_Listings_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Brm_Property_Listings_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/brm-property-listings-admin.js', array( 'jquery' ), $this->version, false );
 
@@ -157,7 +133,7 @@ class Brm_Property_Listings_Admin {
       ]
     ];
 
-    if ( !empty( $taxonomies ) ) {
+    if ( !empty($taxonomies) ) {
       foreach ( $taxonomies as $key => $taxonomy ) {
         // Taxonomy variables
         $taxonomy_string    = str_replace( ' ', '_', strtolower( $key ) );
@@ -243,7 +219,7 @@ class Brm_Property_Listings_Admin {
       case 'city':
         $terms = get_the_terms( $id, 'city' );
 
-        if ( !empty( $terms ) )  {
+        if ( !empty($terms) )  {
           foreach ( $terms as $term ) {
             $output[] = $term->name;
           }
@@ -253,7 +229,7 @@ class Brm_Property_Listings_Admin {
       case 'neighborhood':
         $terms = get_the_terms( $id, 'neighborhood' );
 
-        if ( !empty( $terms ) )  {
+        if ( !empty($terms) )  {
           foreach ( $terms as $term ) {
             $output[] = $term->name;
           }
@@ -375,7 +351,7 @@ class Brm_Property_Listings_Admin {
 			]
 		];
 
-		if ( !empty( $metaboxes ) ) {
+		if ( !empty($metaboxes) ) {
 			foreach ( $metaboxes as $metabox ) {
 				add_meta_box(
 					$metabox['id'], 
@@ -545,7 +521,7 @@ class Brm_Property_Listings_Admin {
 			];
 
 			// Check that custom metabox data is set and save
-			if ( !empty( $metaboxes ) ) {
+			if ( !empty($metaboxes) ) {
 				foreach ( $metaboxes as $key => $metabox ) {
 					if ( !isset( $_POST[$metabox] ) ) {
 						return;
@@ -564,12 +540,12 @@ class Brm_Property_Listings_Admin {
 					}
 				}
 			}
-
-			return;
 		}
 	}
 
 	/**
+	 * Add custom meta to listings API response
+	 * 
 	 * @since 1.0.0
 	 * @link	https://developer.wordpress.org/reference/hooks/rest_prepare_this-post_type/
 	 */

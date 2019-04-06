@@ -196,6 +196,8 @@ class Brm_Property_Listings {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts', 200 );
 		$this->loader->add_action( 'script_loader_tag', $plugin_public, 'script_defer', 10, 3 );
 
+		$this->loader->add_shortcode( 'map', $plugin_public, 'map_shortcode' );
+
 	}
 
 	/**

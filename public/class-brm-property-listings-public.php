@@ -71,18 +71,6 @@ class Brm_Property_Listings_Public {
 	 */
 	public function enqueue_styles() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Brm_Property_Listings_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Brm_Property_Listings_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/brm-property-listings-public.css', array(), $this->version, 'all' );
 
 	}
@@ -94,18 +82,6 @@ class Brm_Property_Listings_Public {
 	 */
 	public function enqueue_scripts() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Brm_Property_Listings_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Brm_Property_Listings_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/brm-property-listings-public.js', array( 'jquery' ), $this->version, true );
 
 		wp_enqueue_script( 'brm-google-maps', 'https://maps.googleapis.com/maps/api/js?key='.$this->google_maps_api.'', [], null, true );
@@ -113,6 +89,8 @@ class Brm_Property_Listings_Public {
 	}
 
 	/**
+	 * Defer / Async scripts
+	 * 
 	 * @since 1.0.0
 	 */
 	public function script_defer( $tag, $handle, $src ) {
@@ -133,6 +111,15 @@ class Brm_Property_Listings_Public {
 		}
 
 		return $tag;
+	}
+
+	/**
+	 * Shortcode to display map listings container
+	 * 
+	 * @since 1.0.0
+	 */
+	public function map_shortcode() {
+		return '<div id="map" class="w-full h-full"></div>';
 	}
 
 }

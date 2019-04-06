@@ -1,6 +1,6 @@
 window.addEventListener('load', () => {
 	const apiRoot = '/wp-json/wp/v2/listings'
-	const container = document.getElementById('listings')
+	const container = document.getElementById('map')
 
 	let map, geocoder, marker
 
