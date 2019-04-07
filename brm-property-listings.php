@@ -14,8 +14,8 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Big Rig Media Property Listings
- * Plugin URI:        https://www.bigrigmedia.com
- * Description:       A basic property listings boilerplate to create custom post types, taxonomies
+ * Plugin URI:        https://github.com/ernstoarllano/bigrigmedia-property-listings
+ * Description:       A properties listing management plugin.
  * Version:           1.0.0
  * Author:            Ernesto Arellano
  * Author URI:        https://ernestoarellano.dev

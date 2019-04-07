@@ -1,0 +1,14 @@
+{
+  "name": "bigrigmedia-property-listings",
+  "version": "1.0.0",
+  "description": "A properties listing management plugin.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ernstoarllano/bigrigmedia-property-listings.git"
+  },
+  "author": "Ernesto Arellano",
+  "bugs": {
+    "url": "https://github.com/ernstoarllano/bigrigmedia-property-listings/issues"
+  },
+  "homepage": "https://github.com/ernstoarllano/bigrigmedia-property-listings#readme"
+}
