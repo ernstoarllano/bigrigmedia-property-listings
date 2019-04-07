@@ -84,6 +84,12 @@ class Brm_Property_Listings_Public {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/brm-property-listings-public.js', array( 'jquery' ), $this->version, true );
 
+		if ( is_singular('listings') ) {
+			global $post;
+
+			wp_localize_script( $this->plugin_name, 'listing', ['id' => $post->ID] );
+		}
+
 		wp_enqueue_script( 'brm-google-maps', 'https://maps.googleapis.com/maps/api/js?key='.$this->google_maps_api.'', [], null, true );
 
 	}
