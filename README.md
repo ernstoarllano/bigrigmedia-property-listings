@@ -1,3 +1,5 @@
+![Plugin Version](https://img.shields.io/github/package-json/v/ernstoarllano/bigrigmedia-property-listings.svg?style=for-the-badge)
+
 # Big Rig Media Property Listings
 
 A WordPress plugin to manage property listings.
