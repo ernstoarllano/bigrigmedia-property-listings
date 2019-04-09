@@ -83,6 +83,7 @@ class Brm_Property_Listings {
 		}
 		$this->plugin_name = 'brm-property-listings';
 		$this->google_maps_api = 'AIzaSyCugE131kHRpc9su0FCtcHaXepJ11xn_Qo';
+		$this->post_type = 'listings';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -162,7 +163,7 @@ class Brm_Property_Listings {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Brm_Property_Listings_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Brm_Property_Listings_Admin( $this->get_plugin_name(), $this->get_version(), $this->get_post_type() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -190,13 +191,19 @@ class Brm_Property_Listings {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Brm_Property_Listings_Public( $this->get_plugin_name(), $this->get_version(), $this->get_google_maps_api() );
+		$plugin_public = new Brm_Property_Listings_Public( $this->get_plugin_name(), $this->get_version(), $this->get_google_maps_api(), $this->get_post_type() );
 
-		//$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
+		$this->loader->add_action( 'init', $plugin_public, 'image_sizes' );
+
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles', 200 );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts', 200 );
+		
+		$this->loader->add_action( 'style_loader_tag', $plugin_public, 'style_preload', 10, 4 );
 		$this->loader->add_action( 'script_loader_tag', $plugin_public, 'script_defer', 10, 3 );
 
 		$this->loader->add_shortcode( 'map', $plugin_public, 'map_shortcode' );
+		$this->loader->add_shortcode( 'listings-filter', $plugin_public, 'filter_shortcode' );
+		$this->loader->add_shortcode( 'listings-filter-results', $plugin_public, 'filter_results_shortcode' );
 
 	}
 
@@ -248,6 +255,16 @@ class Brm_Property_Listings {
 	 */
 	public function get_google_maps_api() {
 		return $this->google_maps_api;
+	}
+
+	/**
+	 * Retreive the post type of the plugin.
+	 * 
+	 * @since			1.0.0
+	 * @return		string		The post type of the plugin.
+	 */
+	public function get_post_type() {
+		return $this->post_type;
 	}
 
 }

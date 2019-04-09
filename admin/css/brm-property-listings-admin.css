@@ -8,3 +8,12 @@
   width: 100%;
   padding: 8px 5px;
 }
+
+.gallery-thumbs {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.gallery-thumbs img + img {
+  margin-left: 15px;
+}

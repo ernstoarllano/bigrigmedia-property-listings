@@ -41,16 +41,26 @@ class Brm_Property_Listings_Admin {
 	private $version;
 
 	/**
+	 * 
+	 * @since		1.0.0
+	 * @access	protected
+	 * @var			string		 $post_type		The post type of the plugin.
+	 */
+	private $post_type;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
-
+	public function __construct( $plugin_name, $version, $post_type ) {
+		
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->post_type = $post_type;
+		$this->metaboxes = $this->metaboxes();
 
 	}
 
@@ -83,7 +93,7 @@ class Brm_Property_Listings_Admin {
 	 * @link 	https://codex.wordpress.org/Function_Reference/register_post_type
 	 */
 	public function register_post_types() {
-		register_post_type( 'listings', [
+		register_post_type( $this->post_type, [
       'label'               	=> 'Listings',
       'public'              	=> true,
       'publicly_queryable'  	=> true,
@@ -115,21 +125,21 @@ class Brm_Property_Listings_Admin {
         'label'         => 'Amenities',
         'url'           => 'amenities',
         'hierarchical'  => true,
-        'parent'        => 'listings'
+        'parent'        => $this->post_type
       ],
       'City' => [
         'public'        => true,
         'label'         => 'City',
         'url'           => 'destinations',
         'hierarchical'  => true,
-        'parent'        => 'listings'
+        'parent'        => $this->post_type
       ],
       'Neighborhood' => [
         'public'        => false,
         'label'         => 'Neighborhood',
         'url'           => 'neighborhood',
         'hierarchical'  => true,
-        'parent'        => 'listings'
+        'parent'        => $this->post_type
       ]
     ];
 
@@ -175,7 +185,7 @@ class Brm_Property_Listings_Admin {
 	 * @link 	https://codex.wordpress.org/Plugin_API/Filter_Reference/post_type_link
 	 */
 	public function taxonomy_permalinks( $url, $post ) {
-		if ( is_object( $post ) && $post->post_type == 'listings' ) {
+		if ( is_object( $post ) && $post->post_type == $this->post_type ) {
       $terms = wp_get_object_terms( $post->ID, 'city' );
 
       if ($terms) {
@@ -250,18 +260,18 @@ class Brm_Property_Listings_Admin {
 	}
 
 	/**
-	 * Create some custom metaboxes for our custom post type
+	 * Define metaboxes to create
 	 * 
-	 * @since 1.0.0
-	 * @link 	https://developer.wordpress.org/reference/functions/add_meta_box/
+	 * @since 	1.0.0
+	 * @return 	array 
 	 */
-	public function add_metaboxes() {
+	public function metaboxes() {
 		$metaboxes = [
 			[
 				'id' 				=> 'listing_address',
 				'title' 		=> 'Address',
 				'callback' 	=> 'metabox_type',
-				'screen' 		=> 'listings',
+				'screen' 		=> $this->post_type,
 				'context' 	=> 'normal',
 				'priority' 	=> 'default',
 				'args'			=> [
@@ -272,7 +282,7 @@ class Brm_Property_Listings_Admin {
 				'id' 				=> 'listing_phone',
 				'title' 		=> 'Phone',
 				'callback' 	=> 'metabox_type',
-				'screen' 		=> 'listings',
+				'screen' 		=> $this->post_type,
 				'context' 	=> 'normal',
 				'priority' 	=> 'default',
 				'args'			=> [
@@ -283,7 +293,7 @@ class Brm_Property_Listings_Admin {
 				'id'				=> 'listing_sister',
 				'title'			=> 'Sister Park',
 				'callback' 	=> 'metabox_type',
-				'screen' 		=> 'listings',
+				'screen' 		=> $this->post_type,
 				'context' 	=> 'normal',
 				'priority' 	=> 'default',
 				'args'			=> [
@@ -298,7 +308,7 @@ class Brm_Property_Listings_Admin {
 				'id' 				=> 'listing_facebook',
 				'title' 		=> 'Facebook',
 				'callback' 	=> 'metabox_type',
-				'screen' 		=> 'listings',
+				'screen' 		=> $this->post_type,
 				'context' 	=> 'normal',
 				'priority' 	=> 'default',
 				'args'			=> [
@@ -309,7 +319,7 @@ class Brm_Property_Listings_Admin {
 				'id' 				=> 'listing_twitter',
 				'title' 		=> 'Twitter',
 				'callback' 	=> 'metabox_type',
-				'screen' 		=> 'listings',
+				'screen' 		=> $this->post_type,
 				'context' 	=> 'normal',
 				'priority' 	=> 'default',
 				'args'			=> [
@@ -320,7 +330,7 @@ class Brm_Property_Listings_Admin {
 				'id' 				=> 'listing_google',
 				'title' 		=> 'Google',
 				'callback' 	=> 'metabox_type',
-				'screen' 		=> 'listings',
+				'screen' 		=> $this->post_type,
 				'context' 	=> 'normal',
 				'priority' 	=> 'default',
 				'args'			=> [
@@ -331,7 +341,7 @@ class Brm_Property_Listings_Admin {
 				'id' 				=> 'listing_yelp',
 				'title' 		=> 'Yelp',
 				'callback' 	=> 'metabox_type',
-				'screen' 		=> 'listings',
+				'screen' 		=> $this->post_type,
 				'context' 	=> 'normal',
 				'priority' 	=> 'default',
 				'args'			=> [
@@ -342,7 +352,7 @@ class Brm_Property_Listings_Admin {
 				'id' 				=> 'listing_gallery',
 				'title' 		=> 'Gallery',
 				'callback' 	=> 'metabox_type',
-				'screen' 		=> 'listings',
+				'screen' 		=> $this->post_type,
 				'context' 	=> 'normal',
 				'priority' 	=> 'default',
 				'args'			=> [
@@ -351,8 +361,18 @@ class Brm_Property_Listings_Admin {
 			]
 		];
 
-		if ( !empty($metaboxes) ) {
-			foreach ( $metaboxes as $metabox ) {
+		return $metaboxes;
+	}
+
+	/**
+	 * Create some custom metaboxes for our custom post type
+	 * 
+	 * @since 1.0.0
+	 * @link 	https://developer.wordpress.org/reference/functions/add_meta_box/
+	 */
+	public function add_metaboxes() {
+		if ( !empty( $this->metaboxes ) ) {
+			foreach ( $this->metaboxes as $metabox ) {
 				add_meta_box(
 					$metabox['id'], 
 					__( $metabox['title'], $this->plugin_name ), 
@@ -390,24 +410,25 @@ class Brm_Property_Listings_Admin {
 
 	/**
 	 * Output an file upload metabox 
+	 * NOTE: Need to revist this a bit
 	 * 
 	 * @since 1.0.0
 	 */
 	public function input_file_metabox( $post_id, $metabox ) {
 		wp_nonce_field( basename( __FILE__ ), 'listings_metabox_nonce' );
 
-		$images = get_post_meta( $post_id, '_' . $metabox['id'], true );
+		$images = get_post_meta( $post_id, '_' . $metabox['id'], true ) ? get_post_meta( $post_id, '_' . $metabox['id'], true ) : null;
 		$image_thumbs = [];
-		$image_inputs = [];
 
 		if ( $images ) {
-			foreach ($images as $image) {
-				$image_attachment = wp_get_attachment_image_src((int) $image, 'w132x132');
-				$image_html = '<img src="'.$image_attachment[0].'" width="'.$image_attachment[1].'" height="'.$image_attachment[2].'">';
-				$image_thumbs[] = $image_html;
+			foreach ( $images as $image ) {
+				$imageIDs = explode(',', $image);
 
-				$input_html = '<input type="hidden" name="listing_gallery[]" value="'.(int) $image.'">';
-				$image_inputs[] = $input_html;
+				foreach ( preg_replace('/[^0-9]/', '', $imageIDs) as $imageID ) {
+					$image_attachment = wp_get_attachment_image_src((int) $imageID, 'w132x132');
+					$image_html = '<img src="'.$image_attachment[0].'" width="'.$image_attachment[1].'" height="'.$image_attachment[2].'">';
+					$image_thumbs[] = $image_html;
+				}
 			}
 		}
 
@@ -420,13 +441,9 @@ class Brm_Property_Listings_Admin {
 		}
 
 		$output .= '</div>';
-		$output .= '<input class="button js-upload" type="button" value="Add Images">';
-
-		if ( $image_inputs ) {
-			foreach ( $image_inputs as $image_input ) {
-				$output .= $image_input;
-			}
-		}
+		$output .= '<input class="button js-upload" type="button" value="Add Images">
+								<input class="button js-clear" type="button" value="Clear Images">
+								<input type="hidden" name="listing_gallery[]" value="'.$images[0].'">';
 
 		echo $output;
 	}
@@ -491,7 +508,7 @@ class Brm_Property_Listings_Admin {
 	 */
 	public function save_metabox( $post_id ) {
 		// Check if correct post type
-		if ( isset( $_POST['post_type'] ) && $_POST['post_type'] === 'listings' ) {
+		if ( isset( $_POST['post_type'] ) && $_POST['post_type'] === $this->post_type ) {
 			// Check for nonce and if it's valid
 			if ( !isset( $_POST['listings_metabox_nonce'] ) && !wp_verify_nonce( $_POST['listings_metabox_nonce'], 'listings_metabox_nonce' ) ) {
 				return;
@@ -507,35 +524,24 @@ class Brm_Property_Listings_Admin {
 				return;
 			}
 
-			// Define our custom metaboxes
-			// Need to make this part easier
-			$metaboxes = [
-				'_listing_address' 	=> 'listing_address',
-				'_listing_phone' 		=> 'listing_phone',
-				'_listing_sister'		=> 'listing_sister',
-				'_listing_facebook'	=> 'listing_facebook',
-				'_listing_twitter'	=> 'listing_twitter',
-				'_listing_google'		=> 'listing_google',
-				'_listing_yelp'			=> 'listing_yelp',
-				'_listing_gallery'	=> 'listing_gallery'
-			];
-
 			// Check that custom metabox data is set and save
-			if ( !empty($metaboxes) ) {
-				foreach ( $metaboxes as $key => $metabox ) {
-					if ( !isset( $_POST[$metabox] ) ) {
+			if ( !empty( $this->metaboxes ) ) {
+				foreach ( $this->metaboxes as $metabox ) {
+					if ( !isset( $_POST[$metabox['id']] ) ) {
 						return;
 					}
 
-					switch ($metabox) {
+					$key = '_' . $metabox['id'];
+
+					switch ($metabox['id']) {
 						case 'listing_sister':
-							update_post_meta( $post_id, $key, sanitize_text_field( (int) $_POST[$metabox] ) );
+							update_post_meta( $post_id, $key, sanitize_text_field( (int) $_POST[$metabox['id']] ) );
 						break;
 						case 'listing_gallery':
-							update_post_meta( $post_id, $key, $_POST[$metabox] );
+							update_post_meta( $post_id, $key, $_POST[$metabox['id']] );
 						break;
 						default:
-							update_post_meta( $post_id, $key, sanitize_text_field( $_POST[$metabox] ) );
+							update_post_meta( $post_id, $key, sanitize_text_field( $_POST[$metabox['id']] ) );
 						break;
 					}
 				}
