@@ -161,11 +161,9 @@ class Brm_Property_Listings_Public {
 	 * @since 1.0.0
 	 */
 	public function filter_shortcode() {
-		global $post;
-
 		$taxonomies = get_object_taxonomies($this->post_type);
 
-		$output = '<form class="filter" action="'.get_permalink($post->ID).'" method="get">';
+		$output = '<form class="filter" action="'.admin_url('admin-ajax.php?action=listings').'" method="post">';
 
 		foreach ( $taxonomies as $key => $taxonomy ) {
 
@@ -181,8 +179,8 @@ class Brm_Property_Listings_Public {
 			]);
 
 			foreach ( $terms as $term ) {
-				if ($_GET) {
-					$get_term = $_GET[$taxonomy];
+				if ($_POST) {
+					$get_term = $_POST[$taxonomy];
 
 					$selected = $get_term === $term->slug ? 'selected' : null;
 				} else {
@@ -202,19 +200,20 @@ class Brm_Property_Listings_Public {
 	}
 
 	/**
-	 * Shortcode to display taxonomies filter results
+	 * Return search results array data
 	 * 
-	 * @since 1.0.0
+	 * @since 	1.0.0
+	 * @return	array
 	 */
-	public function filter_results_shortcode() {
-		if ( ($_GET) && ($_GET['amenities'] || $_GET['city'] || $_GET['neighborhood']) ) {
+	public static function results() {
+		if ( ($_POST) && ($_POST['amenities'] || $_POST['city'] || $_POST['neighborhood']) ) {			
 			$search_term = [];
 			$search_terms = [];
 			$relation = [
 				'relation' => 'AND'
 			];
 
-			foreach ($_GET as $key => $value) {
+			foreach ($_POST as $key => $value) {
 				if (!empty($value)) {
 					$search_term['taxonomy'] = $key;
 					$search_term['terms'] = $value;
@@ -225,18 +224,19 @@ class Brm_Property_Listings_Public {
 
 			if ( $search_terms ) {
 				$data = new \WP_Query([
-					'post_type' => $this->post_type,
-					'posts_per_page' => -1,
-					'tax_query' => array_merge($relation, $search_terms),
-					'orderby' => 'title',
-					'order'   => 'ASC',
+					'post_type' 			=> 'listings',
+					'posts_per_page' 	=> -1,
+					'paged'						=> get_query_var('paged') ? (int) get_query_var('paged') : 1,
+					'tax_query' 			=> array_merge($relation, $search_terms),
+					'orderby' 				=> 'title',
+					'order'   				=> 'ASC'
 				]);
 
-				var_dump($data->tax_query);
-
-				if ( $data->have_posts() ) {
-					var_dump($data->posts);
+				if ( $data->posts ) {
+					echo json_encode($data->posts);
 				}
+
+				wp_die();
 			}
 		}
 

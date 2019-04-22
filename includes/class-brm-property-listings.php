@@ -201,9 +201,11 @@ class Brm_Property_Listings {
 		$this->loader->add_action( 'style_loader_tag', $plugin_public, 'style_preload', 10, 4 );
 		$this->loader->add_action( 'script_loader_tag', $plugin_public, 'script_defer', 10, 3 );
 
+		//$this->loader->add_action( 'wp_ajax_listings', $plugin_public, 'results' );
+		//$this->loader->add_action( 'wp_ajax_nopriv_listings', $plugin_public, 'results' );
+
 		$this->loader->add_shortcode( 'map', $plugin_public, 'map_shortcode' );
 		$this->loader->add_shortcode( 'listings-filter', $plugin_public, 'filter_shortcode' );
-		$this->loader->add_shortcode( 'listings-filter-results', $plugin_public, 'filter_results_shortcode' );
 
 	}
 

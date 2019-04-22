@@ -73,6 +73,8 @@ class Brm_Property_Listings_Admin {
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/brm-property-listings-admin.css', array(), $this->version, 'all' );
 
+		wp_enqueue_editor();
+
 	}
 
 	/**
@@ -128,7 +130,7 @@ class Brm_Property_Listings_Admin {
         'parent'        => $this->post_type
       ],
       'City' => [
-        'public'        => true,
+        'public'        => false,
         'label'         => 'City',
         'url'           => 'destinations',
         'hierarchical'  => true,
@@ -358,6 +360,17 @@ class Brm_Property_Listings_Admin {
 				'args'			=> [
 					'field'	=> 'file'
 				],
+			],
+			[
+				'id' 				=> 'listing_rates',
+				'title' 		=> 'Rates',
+				'callback' 	=> 'metabox_type',
+				'screen' 		=> $this->post_type,
+				'context' 	=> 'normal',
+				'priority' 	=> 'default',
+				'args'			=> [
+					'field'	=> 'textarea'
+				],
 			]
 		];
 
@@ -405,6 +418,9 @@ class Brm_Property_Listings_Admin {
 			case 'file':
 				$this->input_file_metabox( $post->ID, $metabox );
 			break;
+			case 'textarea':
+				$this->input_textarea_metabox( $post->ID, $metabox );
+			break;
 		}
 	}
 
@@ -446,6 +462,20 @@ class Brm_Property_Listings_Admin {
 								<input type="hidden" name="listing_gallery[]" value="'.$images[0].'">';
 
 		echo $output;
+	}
+
+	/**
+	 * Output an input textarea field metabox
+	 * 
+	 * @since 1.0.0
+	 * @link 	https://developer.wordpress.org/plugins/metadata/custom-meta-boxes/#getting-values
+	 */
+	public function input_textarea_metabox( $post_id, $metabox ) {
+		wp_nonce_field( basename( __FILE__ ), 'listings_metabox_nonce' );
+
+		$data = get_post_meta( $post_id, '_' . $metabox['id'], true );
+
+		echo '<textarea id="textarea" class="wp-editor-area" name="'.$metabox['id'].'" rows="5" cols="33">'.$data.'</textarea>';
 	}
 
 	/**
@@ -539,6 +569,9 @@ class Brm_Property_Listings_Admin {
 						break;
 						case 'listing_gallery':
 							update_post_meta( $post_id, $key, $_POST[$metabox['id']] );
+						break;
+						case 'listing_rates':
+							update_post_meta( $post_id, $key, sanitize_text_field( htmlentities($_POST[$metabox['id']]) ) );
 						break;
 						default:
 							update_post_meta( $post_id, $key, sanitize_text_field( $_POST[$metabox['id']] ) );

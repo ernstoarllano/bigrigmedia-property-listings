@@ -4,7 +4,8 @@
  */
 
 :root {
-  --primary-1: #cdd2d7
+  --primary-1: #cdd2d7;
+  --body-font-size: 18px;
 }
 
 .filter {
@@ -43,4 +44,17 @@
   .filter__group {
     width: calc(1 / 4 * 100% - (1 - 1 / 4) * 30px);
   }
+}
+
+.map-content {
+  padding: 10px;
+}
+
+.map-content h4 {
+  margin-bottom: 5px;
+}
+
+.map-content address {
+  margin-bottom: 15px;
+  font-size: var(--body-font-size);
 }

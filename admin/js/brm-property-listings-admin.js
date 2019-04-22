@@ -3,6 +3,7 @@ window.addEventListener('load', () => {
   const clearBtn = document.querySelector('.js-clear')
   const galleryContainer = document.querySelector('.gallery-thumbs')
   const galleryInput = document.querySelector('input[name="listing_gallery[]"]')
+  const textarea = document.getElementById('textarea')
   let frame
 
   // Handle media uploads
@@ -76,5 +77,9 @@ window.addEventListener('load', () => {
       galleryContainer.innerHTML = ''
       galleryInput.value = ''
     })
+  }
+
+  if (textarea) {
+    wp.editor.initialize(textarea.getAttribute('id'), wp.editor.getDefaultSettings())
   }
 })
